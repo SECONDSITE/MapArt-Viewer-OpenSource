@@ -1591,6 +1591,9 @@ OpenLayers.Map = OpenLayers.Class({
                     this.moveTo(newCenterLonLat);
                     this.dragging = false;
                     this.events.triggerEvent("moveend");
+		    var layers = this.layers;
+		    for(var i=0; i<layers.length; i++)
+			layers[i].redraw();
                 }    
             }
         }        

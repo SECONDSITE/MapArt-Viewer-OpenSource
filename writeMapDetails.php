@@ -684,10 +684,12 @@ $out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
 		        #header { height: 43px; padding: 0; background-color: #eee; border: 1px solid #888; }
 		        #subheader { height: 12px; text-align: right; font-size: 10px; color: #555;}
       	    </style>
-		    <script src=\"http://www.openlayers.org/api/2.7/OpenLayers.js\" type=\"text/javascript\"></script>
-            		<link href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css\" rel=\"stylesheet\" type=\"text/css\"/>
-            		<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js\"></script>
-            		<script src=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>
+		    <script src=\"OpenLayers-2.11/lib/OpenLayers.js\" type=\"text/javascript\"></script>
+		<script src=\"jquery-1.4.2.min.js\" type=\"text/javascript\"></script>
+		<script src=\"jquery.contextMenu.js\" type=\"text/javascript\"></script>
+		<link href=\"jquery.contextMenu.css\" rel=\"stylesheet\" type=\"text/css\" />
+            <link href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css\" rel=\"stylesheet\" type=\"text/css\"/> 
+            <script src=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script> 
 
                
 <style type=\"text/css\">
@@ -715,56 +717,63 @@ $out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
 
 <script type=\"text/javascript\">
   
-    $(function() {
+     $(function() {
         $(\"#sortable\").sortable({
             placeholder: 'ui-state-highlight',
             stop: function(i) {
-                placeholder: 'ui-state-highlight'
+               placeholder: 'ui-state-highlight'
 				var indexCount=0;
-				var lastItem = \"\";
-				var thisItem = \"\";
-				var text2=\"\";
-				var text3=\"\";
-                $('li').each(function(index) {
-					if(indexCount>0)
-						lastItem = thisItem;
-					thisItem = $(this).attr(\"id\");
-					text2 = $(this).text().substring($(this).text().indexOf(\"Layer \\\"\")+7, $(this).text().length-$(this).text().indexOf(\"Layer \\\"\"));
-					text3 = text2.substring(0, text2.indexOf(\"\\\"\"));
-					
-					if(indexCount>0)
-					{
-						$('#'+thisItem, window.opener.document).insertAfter($('#'+lastItem, window.opener.document));
-					}
+				//Iterate through all of the \"li\"`s in the document.
+               $('li').each(function(index) {
+				    //A layer will have a name like 'Layer \"myLayer\"'. Here, we do some text processing to get just the layername ('myLayer')
+					var text2 = $(this).text().substring($(this).text().indexOf(\"Layer \\\"\")+7, $(this).text().length-$(this).text().indexOf(\"Layer \\\"\"));
+					var text3 = text2.substring(0, text2.indexOf(\"\\\"\"));
+console.log(\"text3: \"+text3);
+					//If this is a layer (that is, the layername was found and is therefore a non-zero string)...
 					if(window.opener.map.getLayersByName(text3).length>0)
 					{
+						//Get the actual layer object (instead of the \"li\")
 						var thisLayer = window.opener.map.getLayersByName(text3)[0];
-						window.opener.map.getLayersByName(text3)[0].setZIndex($('li').length-indexCount);
-						if(indexCount ==$('li').length-1) {}
+						//Set the zIndex, counting down. We're moving through the \"li\"`s from the top of the document, which
+						// means that layers whose \"li\" are literally higher in the document have a higher z index. This is the
+						// logic behind the sortable list.
+						window.opener.map.getLayersByName(text3)[0].setZIndex(window.opener.overlays.length-indexCount);
+						/*
+						//There is an OpenLayers quirk (bug?) wherein we can't change the baselayer without some strange
+						//  behaviors. So this part has been removed (this is the same reason we've included a non-visible
+						//  base layer on map creation.)
+						if(indexCount ==$('li').length-1)
+						{
+							console.log(\"IndexCount: \"+indexCount+\"-- setting \"+text3+\" as baselayer\");
+							//Set baselayer here.
+						}
+						*/
 					}
 					else
 					{
-						//alert(\"ERROR 1: No layers by that name.\");
+						//We've removed this, and now we're doing nothing. Remember, not all \"li\"`s are layers, so we can safely skip over some
+						//  by doing nothing here.
+						;
 					}
 					indexCount++;
-                });
+               });
             }
         });
-    });
+     });
 </script>
 
 <script type=\"text/javascript\">
 	function setOpacity(r)
 	{
-		tmsoverlay.setOpacity(r);
-		tmsoverlay.setVisibility(true);
+		overlays.setOpacity(r);
+		overlays.setVisibility(true);
 	}
 
 	function slideOpacity(event, ui, tmsnum)
 	{
 		if(document.getElementById(\"checkbox\" + tmsnum).checked==true)
 		{
-			window.opener.tmsoverlay[tmsnum].setOpacity(ui.value/100);
+			window.opener.overlays[tmsnum].setOpacity(ui.value/100);
 		}
 		updateAll(tmsnum, ui.value);
 	}
@@ -774,7 +783,7 @@ $out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
 		var value = parseFloat(document.getElementById(\"opacity\" + tmsnum).value);
 		if(document.getElementById(\"checkbox\" + tmsnum).checked==true)
 		{
-			window.opener.tmsoverlay[tmsnum].setOpacity(value/100);
+			window.opener.overlays[tmsnum].setOpacity(value/100);
 		}
 		updateAll(tmsnum, value);
 	}
@@ -792,12 +801,12 @@ $out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
 		if(document.getElementById(\"checkbox\" + tmsnum).checked==true)
 		{
 			var value = parseFloat(document.getElementById(\"opacity\" + tmsnum).value);
-			window.opener.tmsoverlay[tmsnum].setOpacity(value/100);
+			window.opener.overlays[tmsnum].setOpacity(value/100);
 			window.opener.document.getElementById(\"checkbox\" + tmsnum).checked = true;
 		}
 		else
 		{
-			window.opener.tmsoverlay[tmsnum].setOpacity(0);
+			window.opener.overlays[tmsnum].setOpacity(0);
 			window.opener.document.getElementById(\"checkbox\" + tmsnum).checked = false;
 		}
 	}
@@ -857,7 +866,7 @@ $out .= "</script>
                 <label for=\"lineToggle\">measure distance</label> <script>if(window.opener.document.getElementById('lineToggle').checked) {document.getElementById('lineToggle').checked = 'checked';}</script>
             </li>
             <li>
-                <input type=\"radio\" name=\"type\" value=\"polygon\" id=\"polygonToggle\" onclick=\"window.opener.toggleControl(this); window.opener.document.getElementById('polygonToggle').checked='checked'\" />
+                <input type=\"radio\" name=\"type\" value=\"measurePolygon\" id=\"polygonToggle\" onclick=\"window.opener.toggleControl(this); window.opener.document.getElementById('polygonToggle').checked='checked'\" />
                 <label for=\"polygonToggle\">measure area</label> <script>if(window.opener.document.getElementById('polygonToggle').checked) {document.getElementById('polygonToggle').checked = 'checked';}</script>
             </li>
         </ul>

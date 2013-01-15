@@ -50,10 +50,10 @@ background-color:#F0F0F0;
 
 form
 {
-left:50%;
+left:46%;
 margin-top:13px;
 margin-left:-110;
-position:absolute;
+position:relative;
 }
 input {background-color:#eee;}
 select {background-color:#eee;}
@@ -67,6 +67,7 @@ var processReturn = "";
 
 function initiateEverything()
 {
+	document.getElementById("submit0").disabled = true;
 	executeGDAL();
 	streamInfile();
 }
@@ -142,6 +143,15 @@ function streamInfile()
 			
 			if(gdalExecIsDone==false)
 			{
+				var patt=/^\d+\.?\d*$/;
+				if(document.getElementById("width").value != "Width"
+				&& document.getElementById("height").value != "Height"
+				&& patt.test(document.getElementById("width").value)
+				&& patt.test(document.getElementById("height").value))
+				{
+					document.getElementById("submit0").disabled = true;
+					document.getElementById("submit0").value = "Processing...";
+				}
 				streamInfile();
 				return;
 			}
@@ -149,14 +159,12 @@ function streamInfile()
 			//Once the form is filled out, we can enable the "submit" button.
 			{
 				var patt=/^\d+\.?\d*$/;
-
-				//MAKE SURE _ALL_ LAYERNAMES ARE BEING CHECKED.
-				if(document.getElementById("layername0").value != "Layername"
-				&& document.getElementById("width").value != "Width"
+				if(document.getElementById("width").value != "Width"
 				&& document.getElementById("height").value != "Height"
 				&& patt.test(document.getElementById("width").value)
 				&& patt.test(document.getElementById("height").value))
 				{
+
 					document.getElementById("submit0").disabled = false;
 					document.getElementById("submit0").value = "Continue";
 				}
@@ -268,14 +276,8 @@ function formSubmit()
 <body onload="initiateEverything();">
 
 <h1>Processing your Images</h1>
-<center><div id="loadingbit"/>
-	<span id="loadingtext">
-	..loading your image..
-	</span>
-</div></center>	
 
-
-Please enter the following information while you wait:
+<center>Please enter the following information while you wait:</center>
 <form id="form0" action="" method="GET">
 	
 <?php
@@ -313,6 +315,14 @@ document.getElementById("submit").disabled = true;
 </script>
 
 </form>
+
+
+<center><div id="loadingbit"/>
+	<span id="loadingtext">
+	..loading your image..
+	</span>
+</div></center>	
+
 
 
 </body>
