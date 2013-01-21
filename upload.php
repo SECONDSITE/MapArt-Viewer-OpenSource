@@ -1,95 +1,100 @@
-<html>
-<head>
-
-<title>Upload your Images</title>
-
-<style type="text/css">
-body
-{
-margin:0px;
-padding-left:16px; padding-right:12px;
-font-family:'Lucida Grande',Geneva,Arial,Verdana,sans-serif;
-}
-
-div
-{
-border-style:solid;
-border-color:#888;
-border-width:1px;
-padding:25px;
-}
-
-i
-{
-color:red;
-display:block;
-margin-top:25px;
-text-align:center;
-}
-
-h1
-{
-height:43px;
-margin-top:12px;
-text-align:center;
-margin-bottom:12px;
-background-color:#eee;
-border-style:solid;
-border-color:#888;
-border-width:1px;
-}
-
-p
-{
-margin-top:0px;
-text-indent:25px;
-margin-bottom:0px;
-text-align:justify;
-}
-
-a
-{
-color:#A52A2A;
-font-weight:bold;
-text-decoration:none;
-}
-
-form {margin:0px;}
-input[type="file"]
-{display:block;}
-</style>
-
-<script type="text/javascript">
-var count = 0;
-
-//The users can designate up to ten
-//different images with each session
-//by adding another browsing form.
-
-function addUploadbit()
-{
-	//Limit 10 images.
-	if(++count < 10)
-	{
-		//Create a new browsing form and append
-		//  it to the end of all the other browsing forms.
-		var insertArea = document.getElementById("inserting");
-		var newBit = document.createElement("input");
-		newBit.setAttribute("name","IMG" + count);
-		newBit.setAttribute("type","file");
-		insertArea.appendChild(newBit);
-	}
-	//Limit 10 images.
-	if(count == 9) {document.getElementById("warnings").innerHTML = "10 images max";}
-}
-</script>
-</head>
-<body>
 <?php
 
 //If there's no POST data, we're hitting this page for the first time. Echo the upload form.
 if(count($_POST) == 0)
 {
+?>
+	<html>
+	<head>
+
+	<title>Upload your Images</title>
+
+	<style type="text/css">
+	body
+	{
+	margin:0px;
+	padding-left:16px; padding-right:12px;
+	font-family:'Lucida Grande',Geneva,Arial,Verdana,sans-serif;
+	}
+
+	div
+	{
+	border-style:solid;
+	border-color:#888;
+	border-width:1px;
+	padding:25px;
+	}
+
+	i
+	{
+	color:red;
+	display:block;
+	margin-top:25px;
+	text-align:center;
+	}
+
+	h1
+	{
+	height:43px;
+	margin-top:12px;
+	text-align:center;
+	margin-bottom:12px;
+	background-color:#eee;
+	border-style:solid;
+	border-color:#888;
+	border-width:1px;
+	}
+
+	p
+	{
+	margin-top:0px;
+	text-indent:25px;
+	margin-bottom:0px;
+	text-align:justify;
+	}
+
+	a
+	{
+	color:#A52A2A;
+	font-weight:bold;
+	text-decoration:none;
+	}
+
+	form {margin:0px;}
+	input[type="file"]
+	{display:block;}
+	</style>
+
+	<script type="text/javascript">
+	var count = 0;
+
+	//The users can designate up to ten
+	//different images with each session
+	//by adding another browsing form.
+
+	function addUploadbit()
+	{
+		//Limit 10 images.
+		if(++count < 10)
+		{
+			//Create a new browsing form and append
+			//  it to the end of all the other browsing forms.
+			var insertArea = document.getElementById("inserting");
+			var newBit = document.createElement("input");
+			newBit.setAttribute("name","IMG" + count);
+			newBit.setAttribute("type","file");
+			insertArea.appendChild(newBit);
+		}
+		//Limit 10 images.
+		if(count == 9) {document.getElementById("warnings").innerHTML = "10 images max";}
+	}
+	</script>
+	</head>
+	<body>
+
+
+
+<?php
 	echo "
 		<h1>..Upload up to 10 Images with Identical Extents..</h1>
 		
