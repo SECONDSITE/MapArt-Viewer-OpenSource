@@ -8,7 +8,7 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 
 //Alright, I want to delete "infile.txt" and then make a new one.
-unlink("infile.txt");
+@unlink("infile.txt");
 $fileLink = fopen("infile.txt", "w");
 fwrite($fileLink, "...");
 fclose($fileLink);
