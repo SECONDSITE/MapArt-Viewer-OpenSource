@@ -28,7 +28,7 @@ $out = "<!--
     \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 		<html xmlns=\"http://www.w3.org/1999/xhtml\"
 		  <head>
-		    <title>MCI Viewer</title>
+		    <title>MapArt Viewer OpenSource</title>
 		    <meta http-equiv='imagetoolbar' content='no'/>
 			<style type=\"text/css\">
 				BODY, HTML { padding: 0px; margin: 0px;	}
@@ -571,7 +571,7 @@ $out .= "}
     <body onload=\"init()\" onresize=\"resize()\">
         <center>
 	        <div id=\"header\">
-		        <h1>OpenLayers MCI Viewer</h1>
+		        <h1>MapArt OpenSource Viewer</h1>
 		    </div>
             <div id=\"subheader\">Based on OpenLayers.html from <a href=\"http://www.maptiler.org/\">MapTiler.</a> Images tiled with <a href=\"http://www.klokan.cz/projects/gdal2tiles/\">GDAL2Tiles</a>. MapTiler and GDAL2TILES Copyright &copy; 2008 <a href=\"http://www.klokan.cz/\">Klokan Petr Pridal</a>,  <a href=\"http://www.gdal.org/\">GDAL</a> &amp; <a href=\"http://www.osgeo.org/\">OSGeo</a> <a href=\"http://code.google.com/soc/\">GSoC</a>. OpenSource project started by &copy; 2012 <a href=\"secondsitellc.com\">MapArt, LLC</a>.
 			<!--From Klokan: PLEASE, LET THIS NOTE ABOUT AUTHOR AND PROJECT SOMEWHERE ON YOUR WEBSITE, OR AT LEAST IN THE COMMENT IN HTML. THANK YOU!! :D-->
