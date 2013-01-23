@@ -520,6 +520,15 @@ $out .= "}
 		document.getElementById(\"opacity\" + tmsnum).value=value;
 		$(\"#slider\" + tmsnum).slider(\"value\", value);
 	}
+
+	//Reset the map to the center of the image.
+	function centerMap()
+	{
+		var centerLat = ($extentNLat + $extentSLat) / 2;
+		var centerLon = ($extentWLon + $extentELon) / 2;		
+		var center = new OpenLayers.LonLat(centerLon, centerLat);
+		map.setCenter(center, map.zoom, true, false);
+	}
 	
 	//Toggle the layer \"on\" and \"off\"... setting opacity to zero, or to whatever value is in the
 	//  numerical output box. (McPherson)
@@ -628,6 +637,9 @@ $out .= "			</script>
 						<li>
 							<input type=\"radio\" name=\"type\" value=\"none\" id=\"noneToggle\" onclick=\"toggleControl(this);\" checked=\"checked\" />
 							<label for=\"noneToggle\">Navigate (No Measurement)</label>
+						</li>
+						<li>
+							<button type=\"button\" id=\"centerButton\" style=\"display:inline;\" onclick=\"centerMap()\">Center Map</button>                            
 						</li>
 						<li>
 							<input type=\"radio\" name=\"type\" value=\"line\" id=\"lineToggle\" onclick=\"toggleControl(this);\" />
@@ -796,6 +808,14 @@ console.log(\"text3: \"+text3);
 		$(\"#slider\" + tmsnum).slider(\"value\", value);
 	}
 	
+	function centerMap()
+	{
+		var centerLat = ($extentNLat + $extentSLat) / 2;
+		var centerLon = ($extentWLon + $extentELon) / 2;		
+		var center = new OpenLayers.LonLat(centerLon, centerLat);
+		window.opener.map.setCenter(center, window.opener.map.zoom, true, false);
+	}
+
 	function switchLayer(tmsnum)
 	{
 		if(document.getElementById(\"checkbox\" + tmsnum).checked==true)
@@ -861,6 +881,9 @@ $out .= "</script>
                 <input type=\"radio\" name=\"type\" value=\"none\" id=\"noneToggle\" onclick=\"window.opener.toggleControl(this); window.opener.document.getElementById('noneToggle').checked='checked'\" />
                 <label for=\"noneToggle\">navigate</label> <script>if(window.opener.document.getElementById('noneToggle').checked) {document.getElementById('noneToggle').checked = 'checked';}</script>
             </li>
+	    <li>
+		<button type=\"button\" id=\"centerButton\" style=\"display:inline;\" onclick=\"centerMap()\">Center Map</button>                            
+	    </li>
             <li>
                 <input type=\"radio\" name=\"type\" value=\"line\" id=\"lineToggle\" onclick=\"window.opener.toggleControl(this); window.opener.document.getElementById('lineToggle').checked='checked'\" />
                 <label for=\"lineToggle\">measure distance</label> <script>if(window.opener.document.getElementById('lineToggle').checked) {document.getElementById('lineToggle').checked = 'checked';}</script>
