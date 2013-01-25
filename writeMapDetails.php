@@ -147,7 +147,7 @@ for($i=0; $i<count($img_name); $i++)
 		isBaseLayer: false
 	});
 	map.addLayer(overlays[".($i+1)."]);
-	if (OpenLayers.Util.alphaHack() == false) {overlays[".($i+1)."].setOpacity(0.5);}\n\n";
+	if (OpenLayers.Util.alphaHack() == false) {overlays[".($i+1)."].setOpacity(1.0);}\n\n";
 }
 
 $out .= "var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
@@ -258,14 +258,14 @@ for($i=count($img_name); $i>0; $i--)
        downsize(); //Shrink the mapview to the originally designated sizing.
    }
 
-	 //Set the opacity sliders and numerical readouts to be 50% (we do this once, after we add those elements to the document)
+	 //Set the opacity sliders and numerical readouts to be 100% (we do this once, after we add those elements to the document)
    function resetEverything()
    {
    	//Access the opacity values from the openlayers to reset them
    	//back to fifty, and reset the corresponding slider values as well. \n";
 for($i=0; $i<count($img_name); $i++)
 {
-	$out .= "document.getElementById(\"opacity".($i+1)."\").value = 50; changeSlider(\"#slider".($i+1)."\",50);\n";
+	$out .= "document.getElementById(\"opacity".($i+1)."\").value = 100; changeSlider(\"#slider".($i+1)."\",100);\n";
 }
 $out .= "}
 
@@ -621,7 +621,7 @@ $out .="		</style>
 				<!-- Set the functions for the sliders. We use slideOpacity for both \"slide\" and \"stop\". -->
 				<script type=\"text/javascript\">\n";
 for($i=1; $i<=count($img_name); $i++)
-   $out .= "$(document).ready(function() {\$(\"#slider$i\").slider({step:0.1, slide:function(event, ui){ slideOpacity(event, ui, $i); }, stop:function(event, ui){ slideOpacity(event, ui, $i);}, value:50});});\n";
+   $out .= "$(document).ready(function() {\$(\"#slider$i\").slider({step:0.1, slide:function(event, ui){ slideOpacity(event, ui, $i); }, stop:function(event, ui){ slideOpacity(event, ui, $i);}, value:100});});\n";
 
 $out .= "			</script>
 
@@ -662,7 +662,7 @@ for($i=1; $i<=count($img_name); $i++)
         					<tr width=\"100%\">
             					<td>Opacity:</td>
             					<td width=\"70%\"><div id=\"slider$i\" display=\"inline-block\"></div></td>
-            					<td><input type=\"text\" id=\"opacity$i\" size=\"1\" value=\"50\"/>%&nbsp;&nbsp;&nbsp;<button id=\"changeOpacity$i\" onclick=\"inputOpacity($i)\">Update</button></td>
+            					<td><input type=\"text\" id=\"opacity$i\" size=\"1\" value=\"100\"/>%&nbsp;&nbsp;&nbsp;<button id=\"changeOpacity$i\" onclick=\"inputOpacity($i)\">Update</button></td>
         					</tr>
     					</table>
 					</li>\n";
@@ -671,7 +671,7 @@ $out .= "				</ul>
 					<br>
 				</div></div>
 				<script>
-					//Set all of the opacities to their initial values of 50%
+					//Set all of the opacities to their initial values of 100%
 					resetEverything()
 				</script>
 			</body>
@@ -691,7 +691,7 @@ $out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
 <!-- //MARKER4: Below: changed map height to 500px and added \"footer\" div; removed \"width:100%\" and \"height:100%\" and \"overflow:hidden\" from html/body divs -->
 		    <style type=\"text/css\"> v\:* {behavior:url(#default#VML);}
 		        html, body { padding: 0; font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
-		        body { margin: 10px; background: #fff; }
+		        body { margin: 10px; background: #fff; overflow-y:scroll; }
 		        h1 { margin: 0; padding: 6px; border:0; font-size: 20pt; }
 		        #header { height: 43px; padding: 0; background-color: #eee; border: 1px solid #888; }
 		        #subheader { height: 12px; text-align: right; font-size: 10px; color: #555;}
@@ -869,7 +869,7 @@ $out .="</style>
 	
 for($i=1; $i<=count($img_name); $i++)
 	$out .= "$(document).ready(function() {
-		\$(\"#slider$i\").slider({step:0.1, slide:function(event, ui){ slideOpacity(event, ui, $i); }, stop:function(event, ui){ slideOpacity(event, ui, $i);}, value:50});
+		\$(\"#slider$i\").slider({step:0.1, slide:function(event, ui){ slideOpacity(event, ui, $i); }, stop:function(event, ui){ slideOpacity(event, ui, $i);}, value:100});
 	});\n";
 
 $out .= "</script>
@@ -904,7 +904,7 @@ for($i=1; $i<=count($img_name); $i++)
         <tr width=\"100%\">
             <td>Opacity:</td>
             <td width=\"70%\"><div id=\"slider$i\" display=\"inline-block\"></div></td>
-            <td><input type=\"text\" id=\"opacity$i\" size=\"2\" value=\"50\"/>%&nbsp;&nbsp;&nbsp;<button id=\"changeOpacity$i\" onclick=\"inputOpacity($i)\">Update</button></td>
+            <td><input type=\"text\" id=\"opacity$i\" size=\"2\" value=\"100\"/>%&nbsp;&nbsp;&nbsp;<button id=\"changeOpacity$i\" onclick=\"inputOpacity($i)\">Update</button></td>
         </tr>
     </table>
 </li>\n";
