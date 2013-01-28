@@ -1,4 +1,3 @@
-
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -101,7 +100,8 @@ while(isset($_GET["img$i"]))
 	$exec1 = "gdal_translate -of GTiff -a_srs EPSG:4326 -gcp 0 ".$lines[$i]." -86 34 0 -gcp 0 0 -86 ".$maxLat[$i]." 0 -gcp ".$pixels[$i]." 0 ".$maxLon[$i]." ".$maxLat[$i]." 0 -gcp ".$pixels[$i]." ".$lines[$i]." ".$maxLon[$i]." 34 0 ".$fullFileName[$i]." ".$firstFileName[$i]."-geo.tif >> infile.txt";
 	$exec2 = "gdalwarp -dstalpha -of GTiff -t_srs EPSG:4326 -ts ".$pixels[$i]." ".$lines[$i]." ".$firstFileName[$i]."-geo.tif ".$firstFileName[$i]."-geo-warped.tif >> infile.txt";
 	$exec3 = "gdalbuildvrt ".$firstFileName[$i]."-geo-warped-vrt.vrt ".$firstFileName[$i]."-geo-warped.tif >> infile.txt";
-	$exec4 = "gdal2tiles.py -p 'geodetic' -s EPSG:4326 -z 3-10 ".$firstFileName[$i]."-geo-warped-vrt.vrt >> infile.txt";		
+//WARP EDIT
+	$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 1-5 ".$firstFileName[$i]."-geo-warped-vrt.vrt >> infile.txt";		
 
 	$fileLink = fopen("infile.txt", "a");
 	fwrite($fileLink, "<b><u>Step 2/5: Translating</u></b>\n");

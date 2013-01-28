@@ -75,13 +75,16 @@ var vectorLayer;
   //VARIABLE, based on input.
  var numLayers = $numLayers;
   //These are the bounds of our image... we'll zoom to these bounds later. VARIABLE.
- var mapBounds = new OpenLayers.Bounds( -86.0, 34.0, -85.265625, 35.0);
+//WARP EDIT next two lines
+ //var mapBounds = new OpenLayers.Bounds( -86.0, 34.0, -85.265625, 35.0);
+var mapBounds = new OpenLayers.Bounds(0,0,4096,4096);
+
   //mapMinZoom of zero is too intense... 6 is good for the image we're using. 
   //  Toy with this using the commented-out code in overlay_getTileURL()
   //If we change the mapMinZoom to 6 (which we want to do), we can zoom out to 5 and beyond, and 
   //  the image will just disappear at those levels.
- var mapMinZoom = 0;
- var mapMaxZoom = 15;
+ var mapMinZoom = 1;
+ var mapMaxZoom = 5;
  var dimensionout;
  var measureControls;
   //Our array of layers (tmslayers's)
@@ -107,7 +110,9 @@ var vectorLayer;
 	      projection: new OpenLayers.Projection(\"EPSG:4326\"),
 		  //This is based on \"mapMaxZoom\", or the max zoom level of the map. 
 		  //  Toy with this using the commented-out code in overlay_getTileURL()
-	      maxResolution: 0.703125,
+		//WARP EDIT (next 2 lines)
+	      //maxResolution: 0.703125,
+maxResolution:4096 / 256,
 	
 		 //This is based on \"mapMinZoom\", or the min zoom level of the map. 
 		  //  Toy with this using the commented-out code in overlay_getTileURL()
@@ -121,9 +126,14 @@ var vectorLayer;
 		  //Setting this also gives us a bunch of 404's.
 	      //maxExtent: new OpenLayers.Bounds(-97.116958618164, 33.148681640625, -76.242935180664, 36.400634765625)
 		  //Original extent: (whole wide world)
-		  maxExtent: new OpenLayers.Bounds(-180, -90, 180, 90)
+		//WARP EDIT (next two lines)
+		  //maxExtent: new OpenLayers.Bounds(-180, -90, 180, 90)
+		maxExtent: new OpenLayers.Bounds(0,0,4096,4096),
+//WARP EDIT (next line)
+numZoomLevels:5
     };
-    map = new OpenLayers.Map('map', options);\n\n";
+    map = new OpenLayers.Map('map', options);
+    map.zoomTo(1);\n\n";
 
 for($i=0; $i<count($img_name); $i++)
 {
@@ -406,13 +416,27 @@ $out .= "}
 	{
 		bounds = this.adjustBounds(bounds);
 		var res = this.map.getResolution();
-		var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));
-		var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
+//WARP EDIT (next 11 lines)
+		//OLD, WORKING
+		//var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));
+		//var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
+		var x = Math.round ((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+        	var y = Math.round (this.maxExtent.top / (res * this.tileSize.h) - ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h)));
+		if(y>0)
+			y--;
+
+console.log(\"x = round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w))\");
+console.log(\"x = round(\"+bounds.left+\" / (\"+res+\" * \"+this.tileSize.w+\"))\");
+console.log(\"x = \"+x);
+console.log(\"y = round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h))\");
+console.log(\"y = round(\"+bounds.top+\"/ (\"+res+\" * \"+this.tileSize.h+\"))\");
+console.log(\"y = \"+y);
 		var z = this.map.getZoom();
 		var path = this.serviceVersion + \"/\" + this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type;
 		var url = this.url;
-		if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom)
-		{
+//WARP EDIT commented out \"if\"/\"else\" statements
+		//if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom)
+		//{
 			//Excellent debugging lines for map extent/zoom-related issues:
 			//bounds = this.getExtent();
 			//console.log(\"bounds: \"+bounds.left+\" \"+bounds.bottom+\" \"+bounds.right+\" \"+bounds.top);
@@ -420,8 +444,8 @@ $out .= "}
 			//console.log(\"zoom level: \"+map.getZoom());
 			//console.log(\"Getting image \" + this.url + this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type);
 			return this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type;
-		}
-		else {return \"http://www.maptiler.org/img/none.png\";}
+		//}
+		//else {return \"http://www.maptiler.org/img/none.png\";}
 	}
 
 	//Get the height of the window... (McPherson)
