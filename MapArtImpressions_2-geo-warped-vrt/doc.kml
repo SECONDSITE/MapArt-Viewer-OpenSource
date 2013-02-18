@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<kml xmlns="http://earth.google.com/kml/2.1">
+	  <Document>
+	    <Name>MapArtImpressions_2-geo-warped-vrt.vrt</Name>
+	    <Description></Description>
+	    <Style>
+	      <ListStyle id="hideChildren">
+	        <listItemType>checkHideChildren</listItemType>
+	      </ListStyle>
+	    </Style>
+	    <NetworkLink>
+	      <name>1/0/0.png</name>
+	      <Region>
+	        <Lod>
+	          <minLodPixels>128</minLodPixels>
+	          <maxLodPixels>-1</maxLodPixels>
+	        </Lod>
+	        <LatLonAltBox>
+	          <north>40.30153846153902</north>
+	          <south>33.99999999999989</south>
+	          <east>-79.69846153846086</east>
+	          <west>-85.99999999999999</west>
+	        </LatLonAltBox>
+	      </Region>
+	      <Link>
+	        <href>1/0/0.kml</href>
+	        <viewRefreshMode>onRegion</viewRefreshMode>
+	        <viewFormat/>
+	      </Link>
+	    </NetworkLink>
+	
+	    <NetworkLink>
+	      <name>1/0/1.png</name>
+	      <Region>
+	        <Lod>
+	          <minLodPixels>128</minLodPixels>
+	          <maxLodPixels>-1</maxLodPixels>
+	        </Lod>
+	        <LatLonAltBox>
+	          <north>46.60307692307815</north>
+	          <south>40.30153846153902</south>
+	          <east>-79.69846153846086</east>
+	          <west>-85.99999999999999</west>
+	        </LatLonAltBox>
+	      </Region>
+	      <Link>
+	        <href>1/0/1.kml</href>
+	        <viewRefreshMode>onRegion</viewRefreshMode>
+	        <viewFormat/>
+	      </Link>
+	    </NetworkLink>
+		  </Document>
+	</kml>
+	

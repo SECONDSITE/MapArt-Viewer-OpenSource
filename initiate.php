@@ -139,6 +139,7 @@ function streamInfile()
 		//if the process initiated above has finished just yet.
 		if(xmlhttp.readyState == 4 && xmlhttp.status == 200)
 		{
+			console.log("Proper response in streamInFile");
 			document.getElementById("loadingtext").innerHTML = xmlhttp.responseText.replace(/\n/g, '<br />');
 			
 			if(gdalExecIsDone==false)
@@ -186,6 +187,7 @@ function streamInfile()
 	xmlhttp.open("GET","infile.txt?t="+t,true);
 	//streamInfileIsDone = false;
 	xmlhttp.send();
+	console.log("Started streamInFile");
 }
 
 

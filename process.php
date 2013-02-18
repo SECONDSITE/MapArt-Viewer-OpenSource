@@ -6,7 +6,7 @@ ini_set('display_errors', '1');
 // get an error here if "infile.txt" doesn't exist.
 @unlink("infile.txt");
 
-$fileLink = fopen("infile.txt", "w");
+/*$fileLink = fopen("infile.txt", "w");
 fwrite($fileLink, "GET: \n");
 foreach($_GET as $key=>$value)
   fwrite($fileLink, "$key => $value \n");
@@ -14,7 +14,7 @@ foreach($_GET as $key=>$value)
 fwrite($fileLink, "POST: \n");
 foreach($_POST as $key=>$value)
   fwrite($fileLink, "$key => $value \n");
-fclose($fileLink);
+fclose($fileLink);*/
 
 
 $i=0;
@@ -28,6 +28,7 @@ $firstFileName[$i] = Array();
 $fileLink = fopen("infile.txt", "w");
 fwrite($fileLink, "");
 fclose($fileLink);
+
 //Iterate through input images.
 while(isset($_GET["img$i"]))
 {
@@ -71,7 +72,6 @@ while(isset($_GET["img$i"]))
 		$maxLat[$i] = 35.0;
 		$maxLon[$i] = -86.0 + $pixels[$i]/$lines_adjusted;
 	}
-	if($i==0) echo "|maxLon=".$maxLon[$i]."|maxLat=".$maxLat[$i]."|"; //this is regexp'd in initiate.php
 
 	/*
 	GDAL EXAMPLE:
@@ -129,5 +129,7 @@ while(isset($_GET["img$i"]))
 $fileLink = fopen("infile.txt", "a");
 fwrite($fileLink, "<b><u><font color=\"red\">Finished.</font> Complete the form above to continue.</u></b>\n");
 fclose($fileLink);  
+
+echo "|maxLon=".$maxLon[$i]."|maxLat=".$maxLat[$i]."|"; //this is regexp'd in initiate.php
 exit();
 ?>

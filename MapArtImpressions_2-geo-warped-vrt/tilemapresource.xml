@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<TileMap version="1.0.0" tilemapservice="http://tms.osgeo.org/1.0.0">
+	  <Title>MapArtImpressions_2-geo-warped-vrt.vrt</Title>
+	  <Abstract></Abstract>
+	  <SRS>EPSG:4326</SRS>
+	  <BoundingBox minx="33.99999999999989" miny="-85.99999999999999" maxx="34.99999999999999" maxy="-85.25076923076914"/>
+	  <Origin x="33.99999999999989" y="-85.99999999999999"/>
+	  <TileFormat width="256" height="256" mime-type="image/png" extension="png"/>
+	  <TileSets profile="raster">
+	    <TileSet href="1" units-per-pixel="0.00307692307692" order="1"/>
+	    <TileSet href="2" units-per-pixel="0.00153846153846" order="2"/>
+	    <TileSet href="3" units-per-pixel="0.00076923076923" order="3"/>
+	    <TileSet href="4" units-per-pixel="0.00038461538462" order="4"/>
+	    <TileSet href="5" units-per-pixel="0.00019230769231" order="5"/>
+	  </TileSets>
+	</TileMap>
+	
