@@ -38,12 +38,13 @@ while(isset($_GET["img$i"]))
 	$firstFileName[$i] = substr($fullFileName[$i], 0, $dot);
 
 	fwrite($fileLink, "<h2>Image ".($i+1)."</h2>");
-	fwrite($fileLink, "<b><u>Step 1/5: Getting Info</u></b>\n");
+	fwrite($fileLink, "<b><u>Step 1/2: Getting Info:  gdalinfo " .  $fullFileName[$i] . "</u></b>\n");
 
 	$return = "";
 	//Dump everything from "gdalinfo" into a new array.
 	$output = array();
 	$errno = exec("gdalinfo " . $fullFileName[$i], $output, $return);
+
 	if($errno != 0)
 	{
 		echo "Execution failed with error $errno";
@@ -60,21 +61,47 @@ while(isset($_GET["img$i"]))
 		   //$lines_adjusted /= 1.20048772;
 		}
 	}
-			
+	
+	//When we tile an image, it's placed in a bounding box whose sides are
+	//  the power of 2 >= larger side of the image.
+	//SO, an image 240x230 would be in a 256x256 bounding box.
+	//... an image 256x230 would be in a 256x256 bounding box.
+	//... an image 256x257 would be in a 512x512 bounding box.
+	//Now, let's find the size of our bounding box, and the ratio of the 
+	//  bounding box size to the larger side of the image (boundingBoxRatio)
+	$largerSize = max($pixels[$i], $lines_adjusted);
+	if(largerSize < 256)
+	{
+		$boundingSize = 1;
+		while($largerSize > $boundingSize)
+		{
+			$boundingSize *= 2;
+		}
+		$boundingBoxRatio = $largerSize / $boundingSize;
+	}
+				
 	if($pixels[$i]>$lines_adjusted)
 	{
-		$maxLat[$i] = 34 + $lines_adjusted/$pixels[$i];
-		$maxLon[$i] = -85.0;
+		//Geographic:
+		//$maxLat[$i] = 34 + $lines_adjusted/$pixels[$i];
+		//$maxLon[$i] = -85.0;
+		//Raster:
+		$maxLat[$i] = 4096 * $boundingBoxRatio * $lines_adjusted/$pixels[$i];
+		$maxLon[$i] = 4096 * $boundingBoxRatio;
 	}
 	
 	else
 	{
-		$maxLat[$i] = 35.0;
-		$maxLon[$i] = -86.0 + $pixels[$i]/$lines_adjusted;
+		//Geographic:
+		//$maxLat[$i] = 35.0;
+		//$maxLon[$i] = -86.0 + $pixels[$i]/$lines_adjusted;
+		//Raster:
+		$maxLat[$i] = 4096 * $boundingBoxRatio;
+		$maxLon[$i] = 4096 * $boundingBoxRatio * $pixels[$i]/$lines_adjusted;
 	}
 
 	/*
-	GDAL EXAMPLE:
+	GEOGRAPHIC GDAL EXAMPLE:
 	With pixels = 19193, lines = 15475:
 	     max = 19193
 		 ratio = min/max = 15475/19193 = 0.8062835408742771
@@ -91,40 +118,18 @@ while(isset($_GET["img$i"]))
 	"time gdal2tiles.py -p 'geodetic' -k -s EPSG:32616 -z 3-5 ".$firstFileName."-geo-warped-vrt.vrt";
 	 --> this has been checked, good to go.
 	
+	...BUT we're using raster. It's much simpler and more accurate for documents.
 	*/
-	
-
-	//EPSG:4326  --> WGS84 (straight)
-	//EPSG:32616 --> WGS84 (UTM Zone 16N)
-	//EPSG:26916 --> NAD83 (UTM Zone 16N)
-	$exec1 = "gdal_translate -of GTiff -a_srs EPSG:4326 -gcp 0 ".$lines[$i]." -86 34 0 -gcp 0 0 -86 ".$maxLat[$i]." 0 -gcp ".$pixels[$i]." 0 ".$maxLon[$i]." ".$maxLat[$i]." 0 -gcp ".$pixels[$i]." ".$lines[$i]." ".$maxLon[$i]." 34 0 ".$fullFileName[$i]." ".$firstFileName[$i]."-geo.tif >> infile.txt";
-	$exec2 = "gdalwarp -dstalpha -of GTiff -t_srs EPSG:4326 -ts ".$pixels[$i]." ".$lines[$i]." ".$firstFileName[$i]."-geo.tif ".$firstFileName[$i]."-geo-warped.tif >> infile.txt";
-	$exec3 = "gdalbuildvrt ".$firstFileName[$i]."-geo-warped-vrt.vrt ".$firstFileName[$i]."-geo-warped.tif >> infile.txt";
-//WARP EDIT
-	$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 1-5 ".$firstFileName[$i]."-geo-warped-vrt.vrt >> infile.txt";		
+	$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-6 ".$fullFileName[$i]." >> infile.txt";		
 
 	$fileLink = fopen("infile.txt", "a");
-	fwrite($fileLink, "<b><u>Step 2/5: Translating</u></b>\n");
+	fwrite($fileLink, "<b><u>Step 2/2: Tiling</u></b>\n");
 	fclose($fileLink);
-        $errNo = exec($exec1);
-
-	$fileLink = fopen("infile.txt", "a");
-	fwrite($fileLink, "<b><u>Step 3/5: Warping</u></b>\n");
-	fclose($fileLink);
-	$errNo = exec($exec2);
-
-	$fileLink = fopen("infile.txt", "a");
-	fwrite($fileLink, "<b><u>Step 4/5: Building VRT</u></b>\n");
-	fclose($fileLink);
-	$errNo = exec($exec3);
-
-	$fileLink = fopen("infile.txt", "a");
-	fwrite($fileLink, "<b><u>Step 5/5: Tiling</u></b>\n");
-	fclose($fileLink);
-	$errNo = exec($exec4);
+	$errNo = exec($exec4, $output2, $return2);
 
 	$i++;
-}	
+}
+$i--;
 
 $fileLink = fopen("infile.txt", "a");
 fwrite($fileLink, "<b><u><font color=\"red\">Finished.</font> Complete the form above to continue.</u></b>\n");
