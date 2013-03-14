@@ -201,7 +201,7 @@ OpenLayers.Control.MousePosition = OpenLayers.Class(OpenLayers.Control, {
 	var newHtml;
 
 /////////////////////////////////////////
-//  New Code from MapArt, LLC  //
+//      New Code from MapArt, LLC      //
 /////////////////////////////////////////
 //Pull in the necessary variables:
 var lowLat = OpenLayers_lowLat;
@@ -248,7 +248,7 @@ else
             lonLat.lat.toFixed(digits) +
             this.suffix;
 /**/
-	newHtml = vert + horiz + suffix;
+	newHtml = vert + horiz + suffix + "(" + lonLat.lon + ", " + lonLat.lat + ")";
         return newHtml;
     },
 

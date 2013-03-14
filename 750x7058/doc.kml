@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<kml xmlns="http://earth.google.com/kml/2.1">
+	  <Document>
+	    <Name>750x7058.png</Name>
+	    <Description></Description>
+	    <Style>
+	      <ListStyle id="hideChildren">
+	        <listItemType>checkHideChildren</listItemType>
+	      </ListStyle>
+	    </Style>
+	    <NetworkLink>
+	      <name>0/0/0.png</name>
+	      <Region>
+	        <Lod>
+	          <minLodPixels>128</minLodPixels>
+	          <maxLodPixels>-1</maxLodPixels>
+	        </Lod>
+	        <LatLonAltBox>
+	          <north>7487.00000000000000</north>
+	          <south>-705.00000000000000</south>
+	          <east>8192.00000000000000</east>
+	          <west>0.00000000000000</west>
+	        </LatLonAltBox>
+	      </Region>
+	      <Link>
+	        <href>0/0/0.kml</href>
+	        <viewRefreshMode>onRegion</viewRefreshMode>
+	        <viewFormat/>
+	      </Link>
+	    </NetworkLink>
+		  </Document>
+	</kml>
+	

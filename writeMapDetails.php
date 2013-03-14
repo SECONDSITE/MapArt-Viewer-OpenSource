@@ -7,7 +7,7 @@ while(isset($_GET['img'.$i.'_name']))
 {
 	$img_name[$i] = $_GET['img'.$i.'_name'];
 	$img_directory[$i] = $_GET['img'.$i.'_directory'];
-	$img_directory[$i] = substr($img_directory[$i], 0, strrpos($img_directory[$i], "."))."-geo-warped-vrt";
+	$img_directory[$i] = substr($img_directory[$i], 0, strrpos($img_directory[$i], "."));
 	$i++;
 }
 $numLayers = $i;

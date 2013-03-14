@@ -1,0 +1,25 @@
+<h2>Image 1</h2><b><u>Step 1/5: Getting Info:  gdalinfo uploading/1012x10066.png</u></b>
+Driver: PNG/Portable Network Graphics 
+Files: uploading/1012x10066.png 
+Size is 1012, 1006 
+Coordinate System is `' 
+Metadata: 
+  Comment=Created with GIMP on a Mac 
+Image Structure Metadata: 
+  INTERLEAVE=PIXEL 
+Corner Coordinates: 
+Upper Left  (    0.0,    0.0) 
+Lower Left  (    0.0, 1006.0) 
+Upper Right ( 1012.0,    0.0) 
+Lower Right ( 1012.0, 1006.0) 
+Center      (  506.0,  503.0) 
+Band 1 Block=1012x1 Type=Byte, ColorInterp=Red 
+Band 2 Block=1012x1 Type=Byte, ColorInterp=Green 
+Band 3 Block=1012x1 Type=Byte, ColorInterp=Blue 
+<b><u>Step 5/5: Tiling: gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-6 uploading/1012x10066.png >> infile.txt</u></b>
+Generating Base Tiles:
+0...10...20...30...40...50...60...70...80...90...100 - done.
+Generating Overview Tiles:
+0...10...20...30...40...50...60...70...80...90...100 - done.
+<b><u>Step 5/5: Tiling error: </u></b>
+<b><u><font color="red">Finished.</font> Complete the form above to continue.</u></b>
