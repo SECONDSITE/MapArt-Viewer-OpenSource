@@ -246,8 +246,8 @@ function formSubmit()
 				processReturn = processReturn.substr(processReturn.indexOf('|maxLat=')+8);
 				var maxLat = processReturn.substr(0, processReturn.indexOf('|'));
 				getString += "img_extentNLat=" + maxLat + "&";
-				getString += "img_extentSLat=34&"; 
-				getString += "img_extentWLon=-86&"; 
+				getString += "img_extentSLat=0&"; 
+				getString += "img_extentWLon=-0&"; 
 				getString += "img_extentELon=" + maxLon + "&";
 				getString += "img_height=" + encodeURIComponent(document.getElementById("height").value) + "&";
 				getString += "img_width=" + encodeURIComponent(document.getElementById("width").value) + "&";
