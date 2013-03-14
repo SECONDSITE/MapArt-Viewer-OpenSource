@@ -1,4 +1,4 @@
-<h2>Image 1</h2><b><u>Step 1/2: Getting Info:  gdalinfo uploading/450x453.png</u></b>
+<h2>Image 1</h2><b><u>Step 1/2: Getting Info:  gdalinfo uploading/124x1094.png</u></b>
 <b><u>Step 2/2: Tiling</u></b>
 Generating Base Tiles:
 0...10...20...30...40...50...60...70...80...90...100 - done.

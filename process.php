@@ -70,7 +70,7 @@ while(isset($_GET["img$i"]))
 	//Now, let's find the size of our bounding box, and the ratio of the 
 	//  bounding box size to the larger side of the image (boundingBoxRatio)
 	$largerSize = max($pixels[$i], $lines_adjusted);
-	if(largerSize < 256)
+	if($largerSize < 256)
 	{
 		$boundingSize = 1;
 		while($largerSize > $boundingSize)
@@ -120,7 +120,7 @@ while(isset($_GET["img$i"]))
 	
 	...BUT we're using raster. It's much simpler and more accurate for documents.
 	*/
-	$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-6 ".$fullFileName[$i]." >> infile.txt";		
+	$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
 
 	$fileLink = fopen("infile.txt", "a");
 	fwrite($fileLink, "<b><u>Step 2/2: Tiling</u></b>\n");

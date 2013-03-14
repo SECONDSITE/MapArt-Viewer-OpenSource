@@ -20,10 +20,7 @@ $width = urldecode($_GET['img_width']);
 $units = urldecode($_GET['img_units']);
 $stamp = time();
 
-$out = "<!--
-  Known issues:
-    - There's no reason to zoom out any further than about zoom level 6 (1-5 being useless because you can't see the image). But trying to change things in \"options\", at the beginning of \"init\", gives us a bunch of 404's. This could be a tiler issue, it could be an OpenLayers error.
--->
+$out = "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
     \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 		<html xmlns=\"http://www.w3.org/1999/xhtml\"
@@ -133,7 +130,11 @@ maxResolution:4096 / 256,
 numZoomLevels:5
     };
     map = new OpenLayers.Map('map', options);
-    map.zoomTo(1);\n\n";
+    map.zoomTo(1);
+    OpenLayers.Util.onImageLoadError = function(){
+     console.log(\"onImageLoadError\");
+     this.src = \"none.png\"; };
+    \n\n";
 
 for($i=0; $i<count($img_name); $i++)
 {
@@ -416,36 +417,42 @@ $out .= "}
 	{
 		bounds = this.adjustBounds(bounds);
 		var res = this.map.getResolution();
-//WARP EDIT (next 11 lines)
-		//OLD, WORKING
-		//var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));
-		//var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
 		var x = Math.round ((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-        	var y = Math.round (this.maxExtent.top / (res * this.tileSize.h) - ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h)));
+       	var y = Math.round (this.maxExtent.top / (res * this.tileSize.h) - ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h)));
 		if(y>0)
 			y--;
 
-console.log(\"x = round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w))\");
-console.log(\"x = round(\"+bounds.left+\" / (\"+res+\" * \"+this.tileSize.w+\"))\");
-console.log(\"x = \"+x);
-console.log(\"y = round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h))\");
-console.log(\"y = round(\"+bounds.top+\"/ (\"+res+\" * \"+this.tileSize.h+\"))\");
-console.log(\"y = \"+y);
 		var z = this.map.getZoom();
 		var path = this.serviceVersion + \"/\" + this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type;
 		var url = this.url;
-//WARP EDIT commented out \"if\"/\"else\" statements
+
+		/*var layername = this.layername;
+		var type = this.type;
+		var returnVar = \"\";
+		$.ajax({
+    		url:layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + type,
+    		type:'HEAD',
+    		error: function()
+    		{
+        		//file not exists
+        		console.log(\"File not found\");
+        		returnVar = \"none.png\";
+    		},
+    		success: function()
+    		{
+        		//file exists
+    		    console.log(\"File found!\");
+    		    returnVar = layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + type;
+       		    console.log(\"ReturnVar:\" + returnVar);
+    		}
+		});
+		console.log(\"Returnvar: \"+returnVar);*/
+		
 		//if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom)
 		//{
-			//Excellent debugging lines for map extent/zoom-related issues:
-			//bounds = this.getExtent();
-			//console.log(\"bounds: \"+bounds.left+\" \"+bounds.bottom+\" \"+bounds.right+\" \"+bounds.top);
-			//console.log(\"resolution: \"+map.getResolution());
-			//console.log(\"zoom level: \"+map.getZoom());
-			//console.log(\"Getting image \" + this.url + this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type);
 			return this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type;
 		//}
-		//else {return \"http://www.maptiler.org/img/none.png\";}
+		//else {return \"none.png\";}
 	}
 
 	//Get the height of the window... (McPherson)
