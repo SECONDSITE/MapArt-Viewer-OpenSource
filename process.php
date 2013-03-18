@@ -38,7 +38,7 @@ while(isset($_GET["img$i"]))
 	$firstFileName[$i] = substr($fullFileName[$i], 0, $dot);
 
 	fwrite($fileLink, "<h2>Image ".($i+1)."</h2>");
-	fwrite($fileLink, "<b><u>Step 1/2: Getting Info:  gdalinfo " .  $fullFileName[$i] . "</u></b>\n");
+	fwrite($fileLink, "<b><u>Step 1/2: Getting Info</u></b>\n");
 
 	$return = "";
 	//Dump everything from "gdalinfo" into a new array.
@@ -70,15 +70,12 @@ while(isset($_GET["img$i"]))
 	//Now, let's find the size of our bounding box, and the ratio of the 
 	//  bounding box size to the larger side of the image (boundingBoxRatio)
 	$largerSize = max($pixels[$i], $lines_adjusted);
-	if($largerSize < 256)
+	$boundingSize = 1;
+	while($largerSize > $boundingSize)
 	{
-		$boundingSize = 1;
-		while($largerSize > $boundingSize)
-		{
-			$boundingSize *= 2;
-		}
-		$boundingBoxRatio = $largerSize / $boundingSize;
+		$boundingSize *= 2;
 	}
+	$boundingBoxRatio = $largerSize / $boundingSize;
 				
 	if($pixels[$i]>$lines_adjusted)
 	{
@@ -120,7 +117,8 @@ while(isset($_GET["img$i"]))
 	
 	...BUT we're using raster. It's much simpler and more accurate for documents.
 	*/
-	$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
+	//$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
+	$exec4 = "gdal2tiles.py -p 'raster' -k -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
 
 	$fileLink = fopen("infile.txt", "a");
 	fwrite($fileLink, "<b><u>Step 2/2: Tiling</u></b>\n");

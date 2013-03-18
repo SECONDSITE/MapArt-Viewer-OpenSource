@@ -248,7 +248,7 @@ else
             lonLat.lat.toFixed(digits) +
             this.suffix;
 /**/
-	newHtml = vert + horiz + suffix;
+	newHtml = vert + horiz + suffix;// + "(" + lonLat.lon + ", " + lonLat.lat + ")";
         return newHtml;
     },
 

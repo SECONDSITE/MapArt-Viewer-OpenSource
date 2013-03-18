@@ -198,9 +198,7 @@ if(count($_POST) == 0)
 */
 
 			echo "</p>
-			<i id='caution'></i><script>if(!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {document.getElementById('caution').innerHTML = 'MORE TESTING NEEDED: but we suggest using <a href=http://www.mozilla.org>Firefox</a>.';}</script>
-				
-				<i id='caution'></i><script>if((/Chrome[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {document.getElementById('caution').innerHTML = 'This application currently does not work with Chrome. We suggest <a href=http://www.mozilla.org>Firefox</a>.';}</script>
+			<i id='caution'></i><script>if(!(/Chrome[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {document.getElementById('caution').innerHTML = 'MORE TESTING NEEDED: but we suggest using <a href=http://www.google.com/chrome>Chrome</a>.';}</script>
 	";
 
 	//GET parameters with no POST parameters means an error has occurred.

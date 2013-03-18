@@ -53,6 +53,7 @@ $out = "
 				var OpenLayers_width = $width;
 				var OpenLayers_height = $height;
 				var OpenLayers_units = \"$units\";
+				var OpenLayers_measureRatio = 111.118974; //At 4096x4096, measurements are off by this constant ratio.
 			</script>
 			<!-- This is a custom, local version of OpenLayers. -->
 		    <script src=\"OpenLayers-2.11/lib/OpenLayers.js\" type=\"text/javascript\"></script>
@@ -214,7 +215,8 @@ for($i=count($img_name); $i>0; $i--)
         line: new OpenLayers.Control.Measure(
                                              OpenLayers.Handler.Path, {
                                              persist: true,
-                                             //immediate: true,
+                                             immediate: true,
+                                             geodesic: false,
                                              handlerOptions: {
                                              layerOptions: {styleMap: styleMap}
                                              }
@@ -223,7 +225,8 @@ for($i=count($img_name); $i>0; $i--)
         measurePolygon: new OpenLayers.Control.Measure(
                                                 OpenLayers.Handler.Polygon, {
                                                 persist: false,
-                                                //immediate: true,
+                                                immediate: true,
+                                                geodesic: false,
                                                 handlerOptions: {
                                                 layerOptions: {styleMap: styleMap}
                                                 }
@@ -359,16 +362,17 @@ $out .= "}
 			var units = \"$units\";
 			
         	//Assuming our largest side is 90km...
-          	var ratio = 110/Math.max(height, width);
-			
+          	var ratio = (OpenLayers_highLon - OpenLayers_lowLon) / OpenLayers_width;
 			//The \"order\" variable from the event lets us know if this is in units or units squared (distance or area)
           	if(order==1)
           	{
-            	out += \"Measurement: \" + (measure/ratio).toFixed(3) + \" \" + units;
+            	//out += \"Measurement: \" + (measure/ratio).toFixed(3) + \" \" + units;
+            	out += \"Measurement: \" + ((measure/OpenLayers_measureRatio)/ratio).toFixed(3) + \" \" + units;
           	}
           	else
           	{
-            	out += \"Measurement: \" + (measure/(ratio*ratio)).toFixed(3) + \" \" + units + \"<sup>2</\" + \"sup>\";
+            	//out += \"Measurement: \" + (measure/(ratio*ratio)).toFixed(3) + \" \" + units + \"<sup>2</\" + \"sup>\";
+            	out += \"Measurement: \" + ((measure/(OpenLayers_measureRatio*OpenLayers_measureRatio))/(ratio*ratio)).toFixed(3) + \" \" + units + \"<sup>2</\" + \"sup>\";
           	} 
 
 	    //Output this business to the screen.
