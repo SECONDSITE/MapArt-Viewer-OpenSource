@@ -63,38 +63,30 @@ $out = "
             <link href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css\" rel=\"stylesheet\" type=\"text/css\"/> 
             <script src=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script> 
 
-
 <script type=\"text/javascript\">
 
-
 var vectorLayer;
-  //Our OpenLayers Map.
- var map;
-  //VARIABLE, based on input.
- var numLayers = $numLayers;
-  //These are the bounds of our image... we'll zoom to these bounds later. VARIABLE.
-//WARP EDIT next two lines
- //var mapBounds = new OpenLayers.Bounds( -86.0, 34.0, -85.265625, 35.0);
+//Our OpenLayers Map.
+var map;
+//VARIABLE, based on input.
+var numLayers = $numLayers;
+//These are the bounds of our image... we'll zoom to these bounds later.
 var mapBounds = new OpenLayers.Bounds(0,0,4096,4096);
 
-  //mapMinZoom of zero is too intense... 6 is good for the image we're using. 
-  //  Toy with this using the commented-out code in overlay_getTileURL()
-  //If we change the mapMinZoom to 6 (which we want to do), we can zoom out to 5 and beyond, and 
-  //  the image will just disappear at those levels.
- var mapMinZoom = 1;
- var mapMaxZoom = 5;
- var dimensionout;
- var measureControls;
-  //Our array of layers (tmslayers's)
- var overlays = new Array();
- //Our array of vector layers:
- var vectorLayers = new Array();
- OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
- OpenLayers.Util.onImageLoadErrorColor = \"transparent\";
+var mapMinZoom = 0;
+var mapMaxZoom = 5;
+var dimensionout;
+var measureControls;
+//Our array of layers (tmslayers's)
+var overlays = new Array();
+//Our array of vector layers:
+var vectorLayers = new Array();
+OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+OpenLayers.Util.onImageLoadErrorColor = \"transparent\";
 
- var id_map = new Array();
- //The renderer we use. Not sure what our alternatives are, but we're using OpenLayers.Layer.Vector.prototype.renderers.
- var renderer;
+var id_map = new Array();
+//The renderer we use. Not sure what our alternatives are, but we're using OpenLayers.Layer.Vector.prototype.renderers.
+var renderer;
 
   //This function (at startup) initializes the map and all of its layers (Tomlinson)
  function init()
@@ -106,29 +98,9 @@ var mapBounds = new OpenLayers.Bounds(0,0,4096,4096);
 	      controls: [],
 		  //Projection is WGS84 (planar-- no distortion. Perfect for raster)
 	      projection: new OpenLayers.Projection(\"EPSG:4326\"),
-		  //This is based on \"mapMaxZoom\", or the max zoom level of the map. 
-		  //  Toy with this using the commented-out code in overlay_getTileURL()
-		//WARP EDIT (next 2 lines)
-	      //maxResolution: 0.703125,
-maxResolution:4096 / 256,
-	
-		 //This is based on \"mapMinZoom\", or the min zoom level of the map. 
-		  //  Toy with this using the commented-out code in overlay_getTileURL()
-		  //Alright, so setting this gives us a bunch of 404's for all of our images.
-		  //minResolution: 0.1009598163571613,
-
-		  //This is the extent when we're zoomed out all the way.
-		  // Toy with this using the commented-out code in overlay_getTileURL()
-		  // We want to use mapMinZoom=6, so un-commenting that code we got the following:
-		  //   \"bounds: -97.116958618164 33.148681640625 -76.242935180664 36.400634765625\"
-		  //Setting this also gives us a bunch of 404's.
-	      //maxExtent: new OpenLayers.Bounds(-97.116958618164, 33.148681640625, -76.242935180664, 36.400634765625)
-		  //Original extent: (whole wide world)
-		//WARP EDIT (next two lines)
-		  //maxExtent: new OpenLayers.Bounds(-180, -90, 180, 90)
-		maxExtent: new OpenLayers.Bounds(0,0,4096,4096),
-//WARP EDIT (next line)
-numZoomLevels:5
+		  maxResolution:4096 / 256,
+		  maxExtent: new OpenLayers.Bounds(0,0,4096,4096),
+		  numZoomLevels:6
     };
     map = new OpenLayers.Map('map', options);
     map.zoomTo(1);
@@ -253,26 +225,22 @@ for($i=count($img_name); $i>0; $i--)
    {
        //Define a new window with the subcode of the openlayers. (This will have to dynamically sized depending on layeramounts.)
        thisWindow = window.open(\"openlayers_".$stamp."_popout.html\",\"\",\"width=350,height=300,left=300px,top=300px,resizable=no,scrollbars=no\");
-
        //When the popup window has been initialized, hide the layercontrols as the bottom of the page and rename the docking button.
        document.getElementById('dockbutton').innerHTML = \"<button type='button' onclick='redockComponent()'><b>Redock</b></button>\";
        document.getElementById('resetbutton').style.display = \"none\"; document.getElementById('feet').style.display = \"none\";
-
        upsize(); //Stretch out the mapview of the image to fill in the space vacated by the now hidden layercontrols.
    }
 
    function redockComponent()
    {
-   	thisWindow.close(); //Close out the window that was previously initiated.
-
-   	//Unhide all the layercontrols back at the bottom of the page, and rerename the docking button back again.
+   	   thisWindow.close(); //Close out the window that was previously initiated.
+   	   //Unhide all the layercontrols back at the bottom of the page, and rerename the docking button back again.
        document.getElementById('dockbutton').innerHTML = \"<button type='button' onclick='undockComponent()'><b>Undock</b></button>\";
        document.getElementById('resetbutton').style.display = \"inline\"; document.getElementById('feet').style.display = \"block\";
-
        downsize(); //Shrink the mapview to the originally designated sizing.
    }
 
-	 //Set the opacity sliders and numerical readouts to be 100% (we do this once, after we add those elements to the document)
+   //Set the opacity sliders and numerical readouts to be 100% (we do this once, after we add those elements to the document)
    function resetEverything()
    {
    	//Access the opacity values from the openlayers to reset them
@@ -321,16 +289,6 @@ $out .= "}
 						// means that layers whose \"li\" are literally higher in the document have a higher z index. This is the
 						// logic behind the sortable list.
 						map.getLayersByName(text3)[0].setZIndex(overlays.length-indexCount);
-						/*
-						//There is an OpenLayers quirk (bug?) wherein we can't change the baselayer without some strange
-						//  behaviors. So this part has been removed (this is the same reason we've included a non-visible
-						//  base layer on map creation.)
-						if(indexCount ==$('li').length-1)
-						{
-							console.log(\"IndexCount: \"+indexCount+\"-- setting \"+text3+\" as baselayer\");
-							//Set baselayer here.
-						}
-						*/
 					}
 					else
 					{
@@ -343,9 +301,6 @@ $out .= "}
             }
         });
      });
-
-
-
 	
 	//This function handles the measurements (yep) from the OpenLayers.Control.Measurement...
     function handleMeasurements(event)
@@ -366,12 +321,10 @@ $out .= "}
 			//The \"order\" variable from the event lets us know if this is in units or units squared (distance or area)
           	if(order==1)
           	{
-            	//out += \"Measurement: \" + (measure/ratio).toFixed(3) + \" \" + units;
             	out += \"Measurement: \" + ((measure/OpenLayers_measureRatio)/ratio).toFixed(3) + \" \" + units;
           	}
           	else
           	{
-            	//out += \"Measurement: \" + (measure/(ratio*ratio)).toFixed(3) + \" \" + units + \"<sup>2</\" + \"sup>\";
             	out += \"Measurement: \" + ((measure/(OpenLayers_measureRatio*OpenLayers_measureRatio))/(ratio*ratio)).toFixed(3) + \" \" + units + \"<sup>2</\" + \"sup>\";
           	} 
 
@@ -452,11 +405,7 @@ $out .= "}
 		});
 		console.log(\"Returnvar: \"+returnVar);*/
 		
-		//if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom)
-		//{
-			return this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type;
-		//}
-		//else {return \"none.png\";}
+		return this.layername + \"/\" + z + \"/\" + x + \"/\" + y + \".\" + this.type;
 	}
 
 	//Get the height of the window... (McPherson)
@@ -536,7 +485,7 @@ $out .= "}
 	//  value for opacity and now we want to implement that change. (McPherson)
 	function inputOpacity(tmsnum)
 	{
-//This is all ghetto'd up. If tmsnum > number of tmslayers, we use it on vectorLayers... there's a more elegant way
+		//This is all ghetto'd up. If tmsnum > number of tmslayers, we use it on vectorLayers... there's a more elegant way
 		var value = parseFloat(document.getElementById(\"opacity\" + tmsnum).value);
 		if(document.getElementById(\"checkbox\" + tmsnum).checked==true)
 		{
@@ -595,21 +544,7 @@ $out .= "}
 		}
 		updateAll(tmsnum, ui.value);
 	}
-	
-/*	Implemented a non-toggle version in checkForUpdates
-	//This will toggle the \"there are updates\" div on and off
-	function toggle() {
-		var ele = document.getElementById(\"updateText\");
-		//var text = document.getElementById(\"displayText\");
-		if(ele.style.display == \"block\") {
-	    		ele.style.display = \"none\";
-			text.innerHTML = \"show\";
-	  	}
-		else {
-			ele.style.display = \"block\";
-			text.innerHTML = \"hide\";
-		}
-	}*/
+
 </script>
 </head>
     <body onload=\"init()\" onresize=\"resize()\">
@@ -716,7 +651,17 @@ $fh = fopen("openlayers_".$stamp.".html", "w");
 fwrite($fh, $out);
 fclose($fh);
 
-//Now write the "popout" file, as well:
+
+
+
+
+
+////////////////////////////////////////////////////////
+//   We've finished writing out the main HTML file.   //
+//   Now write the "popout" file, as well:            //
+////////////////////////////////////////////////////////
+
+
 $out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
     \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 		<html xmlns=\"http://www.w3.org/1999/xhtml\"
@@ -785,16 +730,6 @@ console.log(\"text3: \"+text3);
 						// means that layers whose \"li\" are literally higher in the document have a higher z index. This is the
 						// logic behind the sortable list.
 						window.opener.map.getLayersByName(text3)[0].setZIndex(window.opener.overlays.length-indexCount);
-						/*
-						//There is an OpenLayers quirk (bug?) wherein we can't change the baselayer without some strange
-						//  behaviors. So this part has been removed (this is the same reason we've included a non-visible
-						//  base layer on map creation.)
-						if(indexCount ==$('li').length-1)
-						{
-							console.log(\"IndexCount: \"+indexCount+\"-- setting \"+text3+\" as baselayer\");
-							//Set baselayer here.
-						}
-						*/
 					}
 					else
 					{

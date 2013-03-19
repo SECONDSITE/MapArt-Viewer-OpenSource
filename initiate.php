@@ -8,8 +8,13 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 
 //Alright, I want to delete "infile.txt" and then make a new one.
-@unlink("infile.txt");
-$fileLink = fopen("infile.txt", "w");
+//@unlink("infile.txt");
+
+$randIdentifier = rand();
+while(file_exists("infile_$randIdentifier.txt"))
+	$randIdentifier = rand();
+	
+$fileLink = fopen("infile_$randIdentifier.txt", "w");
 fwrite($fileLink, "...");
 fclose($fileLink);
 
@@ -108,8 +113,8 @@ function executeGDAL()
 	for(index in vars) {
 	  getString += index + "=" + vars[index] + "&";
 	}
-	getString = getString.substr(0, getString.length-1);
-	
+	getString += "rand=" + <?php echo $randIdentifier; ?>;
+	//getString = getString.substr(0, getString.length-1);
 	
 	//Open and send the request
 	xmlhttp.open("GET","process.php?"+getString,true);
@@ -144,12 +149,14 @@ function streamInfile()
 			
 			if(gdalExecIsDone==false)
 			{
+			    console.log("gdalExecIsDone is FALSE");
 				var patt=/^\d+\.?\d*$/;
 				if(document.getElementById("width").value != "Width"
 				&& document.getElementById("height").value != "Height"
 				&& patt.test(document.getElementById("width").value)
 				&& patt.test(document.getElementById("height").value))
 				{
+				    console.log("Form complete");
 					document.getElementById("submit0").disabled = true;
 					document.getElementById("submit0").value = "Processing...";
 				}
@@ -159,18 +166,28 @@ function streamInfile()
 			else //GDAL exec is complete... but if our form hasn't been filled out, keep calling this function to check.
 			//Once the form is filled out, we can enable the "submit" button.
 			{
+			    console.log("gdalExecIsDone is TRUE");
 				var patt=/^\d+\.?\d*$/;
 				if(document.getElementById("width").value != "Width"
 				&& document.getElementById("height").value != "Height"
 				&& patt.test(document.getElementById("width").value)
 				&& patt.test(document.getElementById("height").value))
 				{
-
+					console.log("Form complete");
 					document.getElementById("submit0").disabled = false;
 					document.getElementById("submit0").value = "Continue";
 				}
 				else
 				{
+					if(document.getElementById("width").value != "Width")
+					     console.log("Form failed on width");
+				    if(document.getElementById("height").value != "Height")
+				         console.log("Form failed on height");
+				    if(patt.test(document.getElementById("width").value))
+				         console.log("Form failed on width as number");
+				    if(patt.test(document.getElementById("height").value))
+				         console.log("Form failed on height as number");
+				    
 					streamInfile();
 					return;
 				}
@@ -184,7 +201,7 @@ function streamInfile()
 	//Alright, this is goofy since we're reading from a text file, but we need a unique request to prevent caching,
 	// so we tack the current time onto the request.
 	var t = new Date().getTime();
-	xmlhttp.open("GET","infile.txt?t="+t,true);
+	xmlhttp.open("GET","infile_" + <?php echo $randIdentifier; ?> + ".txt?t="+t,true);
 	//streamInfileIsDone = false;
 	xmlhttp.send();
 	console.log("Started streamInFile");

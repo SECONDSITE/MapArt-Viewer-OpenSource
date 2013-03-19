@@ -4,7 +4,7 @@ ini_set('display_errors', '1');
 
 //The "@" supresses error message, but if you have aggressive error reporting, you'll
 // get an error here if "infile.txt" doesn't exist.
-@unlink("infile.txt");
+//@unlink("infile.txt");
 
 /*$fileLink = fopen("infile.txt", "w");
 fwrite($fileLink, "GET: \n");
@@ -16,6 +16,8 @@ foreach($_POST as $key=>$value)
   fwrite($fileLink, "$key => $value \n");
 fclose($fileLink);*/
 
+//Extreme debugging:
+$randIdentifier = $_GET["rand"];
 
 $i=0;
 $pixels = Array();
@@ -25,20 +27,21 @@ $maxLon[$i] = Array();
 $fullFileName[$i] = Array();
 $firstFileName[$i] = Array();
 //Make sure the output file is created...
-$fileLink = fopen("infile.txt", "w");
+$fileLink = fopen("infile_$randIdentifier.txt", "w");
 fwrite($fileLink, "");
 fclose($fileLink);
 
 //Iterate through input images.
 while(isset($_GET["img$i"]))
 {
-	$fileLink = fopen("infile.txt", "a");
+	$fileLink = fopen("infile_$randIdentifier.txt", "a");
 	$fullFileName[$i] = "uploading/".$_GET["img$i"];
 	$dot = strrpos($fullFileName[$i], ".");
 	$firstFileName[$i] = substr($fullFileName[$i], 0, $dot);
 
-	fwrite($fileLink, "<h2>Image ".($i+1)."</h2>");
+	fwrite($fileLink, "<h2>Image ".($i+1)." (i=$i) (randIdentifier $randIdentifier)</h2>");
 	fwrite($fileLink, "<b><u>Step 1/2: Getting Info</u></b>\n");
+	fclose($fileLink);
 
 	$return = "";
 	//Dump everything from "gdalinfo" into a new array.
@@ -118,10 +121,23 @@ while(isset($_GET["img$i"]))
 	...BUT we're using raster. It's much simpler and more accurate for documents.
 	*/
 	//$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
-	$exec4 = "gdal2tiles.py -p 'raster' -k -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
+	
+	//Extreme debugging:
+	$fileLink = fopen("infile_$randIdentifier.txt", "a");
+	fwrite($fileLink, "<b>ps auxwww | grep -i gdal (randIdentifier $randIdentifier)</b>\n");
+	fclose($fileLink);
+	$errNo = exec("ps auxwww | grep -i gdal >> infile_$randIdentifier.txt", $output3, $return3);
 
-	$fileLink = fopen("infile.txt", "a");
-	fwrite($fileLink, "<b><u>Step 2/2: Tiling</u></b>\n");
+	$fileLink = fopen("infile_$randIdentifier.txt", "a");
+	fwrite($fileLink, "<b>ps auxwww | grep -i httpd (randIdentifier $randIdentifier)</b>\n");
+	fclose($fileLink);
+	$errNo = exec("ps auxwww | grep -i httpd >> infile_$randIdentifier.txt", $output4, $return4);
+
+	
+	$exec4 = "gdal2tiles.py -p 'raster' -k -z 0-5 ".$fullFileName[$i]." >> infile_$randIdentifier.txt";		
+
+	$fileLink = fopen("infile_$randIdentifier.txt", "a");
+	fwrite($fileLink, "<b><u>Step 2/2: Tiling (randIdentifier $randIdentifier)</u></b>\n");
 	fclose($fileLink);
 	$errNo = exec($exec4, $output2, $return2);
 
@@ -129,8 +145,8 @@ while(isset($_GET["img$i"]))
 }
 $i--;
 
-$fileLink = fopen("infile.txt", "a");
-fwrite($fileLink, "<b><u><font color=\"red\">Finished.</font> Complete the form above to continue.</u></b>\n");
+$fileLink = fopen("infile_$randIdentifier.txt", "a");
+fwrite($fileLink, "<b><u><font color=\"red\">Finished.</font> Complete the form above to continue. (randIdentifier $randIdentifier)</u></b>\n");
 fclose($fileLink);  
 
 echo "|maxLon=".$maxLon[$i]."|maxLat=".$maxLat[$i]."|"; //this is regexp'd in initiate.php
