@@ -39,7 +39,7 @@ while(isset($_GET["img$i"]))
 	$dot = strrpos($fullFileName[$i], ".");
 	$firstFileName[$i] = substr($fullFileName[$i], 0, $dot);
 
-	fwrite($fileLink, "<h2>Image ".($i+1)." (i=$i) (randIdentifier $randIdentifier)</h2>");
+	fwrite($fileLink, "<h2>Image ".($i+1)."</h2>");
 	fwrite($fileLink, "<b><u>Step 1/2: Getting Info</u></b>\n");
 	fclose($fileLink);
 
@@ -122,22 +122,10 @@ while(isset($_GET["img$i"]))
 	*/
 	//$exec4 = "gdal2tiles.py -p 'raster' -k -s EPSG:4326 -z 0-5 ".$fullFileName[$i]." >> infile.txt";		
 	
-	//Extreme debugging:
-	$fileLink = fopen("infile_$randIdentifier.txt", "a");
-	fwrite($fileLink, "<b>ps auxwww | grep -i gdal (randIdentifier $randIdentifier)</b>\n");
-	fclose($fileLink);
-	$errNo = exec("ps auxwww | grep -i gdal >> infile_$randIdentifier.txt", $output3, $return3);
-
-	$fileLink = fopen("infile_$randIdentifier.txt", "a");
-	fwrite($fileLink, "<b>ps auxwww | grep -i httpd (randIdentifier $randIdentifier)</b>\n");
-	fclose($fileLink);
-	$errNo = exec("ps auxwww | grep -i httpd >> infile_$randIdentifier.txt", $output4, $return4);
-
-	
 	$exec4 = "gdal2tiles.py -p 'raster' -k -z 0-5 ".$fullFileName[$i]." >> infile_$randIdentifier.txt";		
 
 	$fileLink = fopen("infile_$randIdentifier.txt", "a");
-	fwrite($fileLink, "<b><u>Step 2/2: Tiling (randIdentifier $randIdentifier)</u></b>\n");
+	fwrite($fileLink, "<b><u>Step 2/2: Tiling</u></b>\n");
 	fclose($fileLink);
 	$errNo = exec($exec4, $output2, $return2);
 
@@ -146,7 +134,7 @@ while(isset($_GET["img$i"]))
 $i--;
 
 $fileLink = fopen("infile_$randIdentifier.txt", "a");
-fwrite($fileLink, "<b><u><font color=\"red\">Finished.</font> Complete the form above to continue. (randIdentifier $randIdentifier)</u></b>\n");
+fwrite($fileLink, "<b><u><font color=\"red\">Finished.</font> Complete the form above to continue.</u></b>\n");
 fclose($fileLink);  
 
 echo "|maxLon=".$maxLon[$i]."|maxLat=".$maxLat[$i]."|"; //this is regexp'd in initiate.php
